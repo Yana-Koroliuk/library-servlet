@@ -53,6 +53,18 @@ public class JDBCAuthorDao implements AuthorDao {
 
     @Override
     public Optional<Author> findByNames(String name1, String name2) {
+        try (PreparedStatement statement = connection.prepareStatement(SQLConstants.GET_AUTHOR_BY_NAME)) {
+            statement.setString(1, name1);
+            statement.setString(2, name2);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                AuthorMapper mapper = new AuthorMapper();
+                Author author = mapper.extractFromResultSet(resultSet);
+                return Optional.of(author);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return Optional.empty();
     }
 
@@ -73,7 +85,20 @@ public class JDBCAuthorDao implements AuthorDao {
 
     @Override
     public List<Author> getAuthorsByBookId(long id) {
-        return null;
+        List<Author> authors = new ArrayList<>();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQLConstants.GET_AUTHORS_BY_BOOK_ID)) {
+            preparedStatement.setLong(1, id);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    AuthorMapper mapper = new AuthorMapper();
+                    Author author = mapper.extractFromResultSetWithId(resultSet, "author_id");
+                    authors.add(author);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return authors;
     }
 
     @Override
