@@ -67,7 +67,7 @@ public class JDBCBookDao implements BookDao {
     @Override
     public Optional<Book> findById(long id) throws SQLException {
         try (PreparedStatement getBookStatement = connection.prepareStatement(SQLConstants.GET_PARTIAL_BOOK_BY_ID);
-            PreparedStatement getAuthorsStatement = connection.prepareStatement(SQLConstants.GET_AUTHORS_BY_BOOK_ID)) {
+             PreparedStatement getAuthorsStatement = connection.prepareStatement(SQLConstants.GET_AUTHORS_BY_BOOK_ID)) {
             connection.setAutoCommit(false);
             getBookStatement.setLong(1, id);
             Book book = null;
@@ -149,7 +149,7 @@ public class JDBCBookDao implements BookDao {
         String query = chooseSortingQuery(sortBy, sortType);
         try (PreparedStatement statement =
                      connection.prepareStatement(query);
-            PreparedStatement findAuthors = connection.prepareStatement(SQLConstants.GET_AUTHORS_BY_BOOK_ID)) {
+             PreparedStatement findAuthors = connection.prepareStatement(SQLConstants.GET_AUTHORS_BY_BOOK_ID)) {
             statement.setString(1, keyWord);
             statement.setString(2, keyWord);
             int offsetPosition = (page-1)*4;
@@ -183,23 +183,74 @@ public class JDBCBookDao implements BookDao {
 
     @Override
     public List<Book> findAll() {
-        return null;
+        List<Book> bookList = new ArrayList<>();
+        try (Statement getBookStatement = connection.createStatement();
+             PreparedStatement getAuthorsStatement = connection.prepareStatement(SQLConstants.GET_AUTHORS_BY_BOOK_ID)) {
+            ResultSet resultSet = getBookStatement.executeQuery(SQLConstants.GET_ALL_BOOKS);
+            connection.setAutoCommit(false);
+            while (resultSet.next()) {
+                Book book = getBookWithAuthors(getAuthorsStatement, resultSet);
+                bookList.add(book);
+            }
+            connection.commit();
+            connection.setAutoCommit(true);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return bookList;
     }
 
     @Override
     public void update(Book entity) {
+        try (PreparedStatement statement = connection.prepareStatement(SQLConstants.UPDATE_PARTIAL_BOOK)) {
+            statement.setString(1, entity.getTitle());
+            statement.setString(2, entity.getDescription());
+            statement.setString(3, entity.getLanguage());
+            statement.setLong(4, entity.getEdition().getId());
+            statement.setBigDecimal(6, entity.getPrice());
+            statement.setObject(5, entity.getPublicationDate());
+            statement.setInt(7, entity.getCount());
+            statement.setString(8, entity.getAnotherTitle());
+            statement.setString(9, entity.getAnotherDescription());
+            statement.setString(10, entity.getAnotherLanguage());
+            statement.setLong(11, entity.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void updateAmount(Book entity) {
+        try (PreparedStatement statement = connection.prepareStatement(SQLConstants.UPDATE_AMOUNT_OF_BOOK)) {
+            statement.setInt(1, entity.getCount());
+            statement.setLong(2, entity.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void setAuthorship(Book book, Author author) {
+        try (PreparedStatement statement = connection.prepareStatement(SQLConstants.SET_AUTHORSHIP)) {
+            statement.setLong(1, author.getId());
+            statement.setLong(2, book.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void unSetAuthorship(Book book, Author author) {
+        try (PreparedStatement statement = connection.prepareStatement(SQLConstants.UNSET_AUTHORSHIP)) {
+            statement.setLong(1, book.getId());
+            statement.setLong(2, author.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
