@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="info" strict="true" packages="org.apache.logging.log4j.test">
+    <Properties>
+        <Property name="fileName">target/app.log</Property>
+    </Properties>
+    <Appenders>
+        <Appender type="Console" name="STDOUT">
+            <Layout type="PatternLayout" pattern="%r [%t] %-5p %c - %m%n"/>
+        </Appender>
+        <Appender type="File" name="File" fileName="${fileName}">
+            <Layout type="PatternLayout" pattern="%r [%t] %-5p %c - %m%n"/>
+        </Appender>
+    </Appenders>
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="STDOUT"/>
+            <AppenderRef ref="File"/>
+        </Root>
+    </Loggers>
+</Configuration>
