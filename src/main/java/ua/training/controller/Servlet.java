@@ -26,6 +26,7 @@ public class Servlet extends HttpServlet {
 
     public void init() {
         commandMap.put("signup", new Signup(new UserService()));
+        commandMap.put("login", new Login(new UserService()));
     }
 
     public void doGet(HttpServletRequest request,
