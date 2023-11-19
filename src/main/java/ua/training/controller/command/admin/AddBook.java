@@ -10,6 +10,7 @@ import ua.training.model.service.BookService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -65,7 +66,8 @@ public class AddBook implements Command {
             priceUa = price;
         } else {
             priceUa = price.multiply(new BigDecimal(30));
-        }        Optional<Book> optionalBook = bookService.findByTitleAndAuthorsNames(titleUa, authorNamesUa, authorNamesEn);
+        }
+        Optional<Book> optionalBook = bookService.findByTitleAndAuthorsNames(titleUa, authorNamesUa, authorNamesEn);
         if (optionalBook.isPresent()) {
             return "redirect:/admin/addBook?createError=true";
         }
@@ -97,12 +99,14 @@ public class AddBook implements Command {
                 .count(count)
                 .authors(authors)
                 .build();
+
         boolean result = bookService.createBook(book);
         if (!result) {
             logger.error("An error occurred when creating book with title="+titleUa+"/"+titleEn+"" +
                     " and authors="+authorsStringUa+"/"+authorsStringEn);
             return "/error/error.jsp";
         }
+        logger.info("Created book with title="+titleUa+"/"+titleEn+" and authors="+authorsStringUa+"/"+authorsStringEn);
         return "redirect:/admin/addBook?successCreation=true";
     }
 }
