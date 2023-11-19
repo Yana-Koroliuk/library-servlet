@@ -60,8 +60,12 @@ public class AddBook implements Command {
         }
         List<String> authorNamesUa = Arrays.asList(authorsStringUa.split(","));
         List<String> authorNamesEn = Arrays.asList(authorsStringEn.split(","));
-        BigDecimal priceUa = BigDecimal.valueOf(0);
-        Optional<Book> optionalBook = bookService.findByTitleAndAuthorsNames(titleUa, authorNamesUa, authorNamesEn);
+        BigDecimal priceUa;
+        if (currency.equals("uan")) {
+            priceUa = price;
+        } else {
+            priceUa = price.multiply(new BigDecimal(30));
+        }        Optional<Book> optionalBook = bookService.findByTitleAndAuthorsNames(titleUa, authorNamesUa, authorNamesEn);
         if (optionalBook.isPresent()) {
             return "redirect:/admin/addBook?createError=true";
         }
