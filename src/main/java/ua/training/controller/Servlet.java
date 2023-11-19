@@ -3,6 +3,7 @@ package ua.training.controller;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ua.training.controller.command.*;
+import ua.training.controller.command.admin.AdminHome;
 import ua.training.controller.command.librarian.GetReaderBooks;
 import ua.training.controller.command.librarian.LibrarianHome;
 import ua.training.controller.command.reader.OrderBook;
@@ -37,6 +38,7 @@ public class Servlet extends HttpServlet {
         commandMap.put("reader/orderBook", new OrderBook(new UserService(), new BookService(), new OrderService()));
         commandMap.put("librarian/home", new LibrarianHome(new OrderService(), new UserService()));
         commandMap.put("librarian/getReaderBooks", new GetReaderBooks(new OrderService(), new UserService()));
+        commandMap.put("admin/home", new AdminHome(new UserService(), new BookService()));
     }
 
     public void doGet(HttpServletRequest request,
