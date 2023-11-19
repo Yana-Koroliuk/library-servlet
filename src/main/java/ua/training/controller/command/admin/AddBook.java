@@ -97,7 +97,12 @@ public class AddBook implements Command {
                 .count(count)
                 .authors(authors)
                 .build();
-
+        boolean result = bookService.createBook(book);
+        if (!result) {
+            logger.error("An error occurred when creating book with title="+titleUa+"/"+titleEn+"" +
+                    " and authors="+authorsStringUa+"/"+authorsStringEn);
+            return "/error/error.jsp";
+        }
         return "redirect:/admin/addBook?successCreation=true";
     }
 }
