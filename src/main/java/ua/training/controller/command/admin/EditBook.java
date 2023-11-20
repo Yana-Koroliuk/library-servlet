@@ -55,11 +55,17 @@ public class EditBook implements Command {
             }
         }
         LocalDate publicationData = LocalDate.parse(publicationDateString);
+        BigDecimal price = BigDecimal.valueOf(Double.parseDouble(stringPrice));
         int count = Integer.parseInt(stringCount);
 
         List<String> authorNamesUa = Arrays.asList(authorsStringUa.split(","));
         List<String> authorNamesEn = Arrays.asList(authorsStringEn.split(","));
-        BigDecimal priceUa = null;
+        BigDecimal priceUa;
+        if (currency.equals("uan")) {
+            priceUa = price;
+        } else {
+            priceUa = price.multiply(new BigDecimal(30));
+        }
         Edition edition = new Edition.Builder()
                 .name(editionNameUa)
                 .anotherName(editionNameEn)
