@@ -54,7 +54,40 @@ public class EditBook implements Command {
                 return "/user/admin/bookForm.jsp?id="+id;
             }
         }
+        LocalDate publicationData = LocalDate.parse(publicationDateString);
+        int count = Integer.parseInt(stringCount);
 
+        List<String> authorNamesUa = Arrays.asList(authorsStringUa.split(","));
+        List<String> authorNamesEn = Arrays.asList(authorsStringEn.split(","));
+        BigDecimal priceUa = null;
+        Edition edition = new Edition.Builder()
+                .name(editionNameUa)
+                .anotherName(editionNameEn)
+                .build();
+
+        List<Author> authors = new ArrayList<>();
+        for (int i = 0; i < authorNamesUa.size(); i++) {
+            Author author = new Author.Builder()
+                    .name(authorNamesUa.get(i))
+                    .anotherName(authorNamesEn.get(i))
+                    .build();
+            authors.add(author);
+        }
+
+        Book book = new Book.Builder()
+                .id(Long.parseLong(id))
+                .title(titleUa)
+                .anotherTitle(titleEn)
+                .description(descriptionUa)
+                .anotherDescription(descriptionEn)
+                .language(languageUa)
+                .anotherLanguage(languageEn)
+                .edition(edition)
+                .publicationDate(publicationData)
+                .price(priceUa)
+                .count(count)
+                .authors(authors)
+                .build();
 
         Optional<Book> optionalBook1 = bookService.findById(Long.parseLong(id));
         optionalBook1.ifPresent(value -> request.setAttribute("book", value));
