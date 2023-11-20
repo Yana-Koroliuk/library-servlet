@@ -57,7 +57,13 @@ public class EditBook implements Command {
         LocalDate publicationData = LocalDate.parse(publicationDateString);
         BigDecimal price = BigDecimal.valueOf(Double.parseDouble(stringPrice));
         int count = Integer.parseInt(stringCount);
-
+        boolean condition5 = publicationData.isAfter(LocalDate.now()) || publicationData.isEqual(LocalDate.now());
+        boolean condition6 = price.compareTo(BigDecimal.ZERO) <= 0 || count <= 0;
+        if (condition5 || condition6) {
+            Optional<Book> optionalBook1 = bookService.findById(Long.parseLong(id));
+            optionalBook1.ifPresent(value -> request.setAttribute("book", value));
+            return "redirect:/admin/editBook?id="+id+"&validError=true";
+        }
         List<String> authorNamesUa = Arrays.asList(authorsStringUa.split(","));
         List<String> authorNamesEn = Arrays.asList(authorsStringEn.split(","));
         BigDecimal priceUa;
