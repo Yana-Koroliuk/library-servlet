@@ -88,7 +88,11 @@ public class EditBook implements Command {
                 .count(count)
                 .authors(authors)
                 .build();
-
+        boolean result = bookService.updateBook(book);
+        if (!result) {
+            logger.error("An error occurred when editing book with id="+id);
+            return "/error/error.jsp";
+        }
         Optional<Book> optionalBook1 = bookService.findById(Long.parseLong(id));
         optionalBook1.ifPresent(value -> request.setAttribute("book", value));
         return "redirect:/admin/editBook?id="+id+"&successCreation=true";
