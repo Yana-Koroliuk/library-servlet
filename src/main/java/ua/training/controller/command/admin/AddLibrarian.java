@@ -23,6 +23,13 @@ public class AddLibrarian implements Command {
     public String execute(HttpServletRequest request) {
         String login = request.getParameter("login");
         String password = request.getParameter("password");
+        String loginPattern = "^(?!.*\\.\\.)(?!.*\\.$)[^\\W][\\w.]{4,20}$";
+        String passwordPattern = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,30}$";
+        boolean isLoginValid = Pattern.matches(loginPattern, login);
+        boolean isPasswordValid = Pattern.matches(passwordPattern, password);
+        if (!isLoginValid || !isPasswordValid) {
+            return "redirect:/admin/librarianForm.jsp?validError=true";
+        }
         User user = new User.Builder()
                 .login(login)
                 .password_hash(password)
