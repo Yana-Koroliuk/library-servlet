@@ -45,8 +45,10 @@ public class AddLibrarian implements Command {
                 .build();
         boolean result = userService.singUpUser(user);
         if (!result) {
+            logger.error("An error occurred when creating librarian with login="+login);
             return "/error/error.jsp";
         } else {
+            logger.info("Created librarian with login="+login);
             return "redirect:/admin/addLibrarian?successEvent=true";
         }
     }
