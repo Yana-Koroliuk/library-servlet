@@ -33,6 +33,10 @@ public class AddLibrarian implements Command {
         if (!isLoginValid || !isPasswordValid) {
             return "redirect:/admin/librarianForm.jsp?validError=true";
         }
+        Optional<User> optionalUser = userService.findByLogin(login);
+        if (optionalUser.isPresent()) {
+            return "redirect:/admin/librarianForm.jsp?loginError=true";
+        }
         User user = new User.Builder()
                 .login(login)
                 .password_hash(password)
