@@ -29,12 +29,14 @@ public class DeleteLibrarian implements Command {
         }
         boolean result = userService.delete(Long.parseLong(librarianId));
         if (!result) {
+            logger.error("An error occurred when deleting librarian with id="+librarianId);
             return "/error/error.jsp";
         }
         List<User> userList = userService.findAll();
         List<Book> bookList = bookService.findAll();
         request.setAttribute("userList", userList);
         request.setAttribute("bookList", bookList);
+        logger.info("Deleted librarian with id="+librarianId);
         return "redirect:/admin/home?tab=1";
     }
 }
