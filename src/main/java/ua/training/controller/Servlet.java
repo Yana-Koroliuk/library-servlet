@@ -44,6 +44,7 @@ public class Servlet extends HttpServlet {
         commandMap.put("admin/deleteBook", new DeleteBook(new UserService(), new BookService()));
         commandMap.put("admin/addLibrarian", new AddLibrarian(new UserService()));
         commandMap.put("admin/deleteLibrarian", new DeleteLibrarian(new UserService(), new BookService()));
+        commandMap.put("admin/blockUser", new BlockUser(new UserService()));
     }
 
     public void doGet(HttpServletRequest request,
