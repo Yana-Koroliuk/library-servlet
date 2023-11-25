@@ -3,10 +3,7 @@ package ua.training.controller;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ua.training.controller.command.*;
-import ua.training.controller.command.admin.AddBook;
-import ua.training.controller.command.admin.AdminHome;
-import ua.training.controller.command.admin.DeleteBook;
-import ua.training.controller.command.admin.EditBook;
+import ua.training.controller.command.admin.*;
 import ua.training.controller.command.librarian.GetReaderBooks;
 import ua.training.controller.command.librarian.LibrarianHome;
 import ua.training.controller.command.reader.OrderBook;
@@ -45,6 +42,8 @@ public class Servlet extends HttpServlet {
         commandMap.put("admin/addBook", new AddBook(new BookService()));
         commandMap.put("admin/editBook", new EditBook(new BookService()));
         commandMap.put("admin/deleteBook", new DeleteBook(new UserService(), new BookService()));
+        commandMap.put("admin/addLibrarian", new AddLibrarian(new UserService()));
+        commandMap.put("admin/deleteLibrarian", new DeleteLibrarian(new UserService(), new BookService()));
     }
 
     public void doGet(HttpServletRequest request,
