@@ -6,9 +6,10 @@ import ua.training.model.entity.Book;
 import ua.training.model.service.BookService;
 
 import javax.servlet.http.HttpServletRequest;
+
 import java.util.Collections;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -51,4 +52,25 @@ public class SearchTest {
         assertEquals(expected, actual);
     }
 
+    @Test
+    public void execute() {
+        String page = "2";
+        String amountOfPages = "3";
+        String keyWords = "word";
+        String sortBy = "title";
+        String sortType = "dec";
+        when(mockedRequest.getParameter("keyWords")).thenReturn(keyWords);
+        when(mockedRequest.getParameter("page")).thenReturn(page);
+        when(mockedRequest.getParameter("sortBy")).thenReturn(sortBy);
+        when(mockedRequest.getParameter("sortType")).thenReturn(sortType);
+        when(mockedBookService.findAllByKeyWord(keyWords, sortBy, sortType, Integer.parseInt(page)))
+                .thenReturn(Collections.singletonList(new Book.Builder().build()));
+        when(mockedBookService.getBookAmountWithKeyWord(keyWords)).thenReturn(12L);
+
+        String expected = "/search.jsp?page="+page+"&sortBy="+sortBy+"&sortType="+sortType+"&keyWords="+keyWords
+                +"&amountOfPages="+amountOfPages;
+        String actual = searchCommand.execute(mockedRequest);
+
+        assertEquals(expected, actual);
+    }
 }
