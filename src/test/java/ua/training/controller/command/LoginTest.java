@@ -9,10 +9,12 @@ import ua.training.model.service.UserService;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
 import java.util.HashSet;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -80,4 +82,68 @@ public class LoginTest {
         assertEquals(expected, actual);
     }
 
+    @Test
+    public void executeWithBlockedUser() {
+        String login = "user1";
+        String password = "11111eee";
+        when(mockedRequest.getParameter("login")).thenReturn(login);
+        when(mockedRequest.getParameter("password")).thenReturn(password);
+        when(mockedUserService.findByLogin("user1")).thenReturn(Optional.of(mockedUser));
+        when(mockedUser.getPasswordHash()).thenReturn(password);
+        when(mockedUser.isBlocked()).thenReturn(true);
+
+        String expected = "/blocked.jsp";
+        String actual = loginCommand.execute(mockedRequest);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void executeWithAlreadyLoggedInUser() {
+        HttpSession session = mock(HttpSession.class);
+        ServletContext context = mock(ServletContext.class);
+        String login = "user1";
+        String password = "11111eee";
+        HashSet<String> loggedUsers = new HashSet<>();
+        loggedUsers.add(login);
+        loggedUsers.add("user2");
+        when(mockedRequest.getParameter("login")).thenReturn(login);
+        when(mockedRequest.getParameter("password")).thenReturn(password);
+        when(mockedUserService.findByLogin("user1")).thenReturn(Optional.of(mockedUser));
+        when(mockedUser.getPasswordHash()).thenReturn(password);
+        when(mockedUser.isBlocked()).thenReturn(false);
+        when(mockedUser.getRole()).thenReturn(Role.ADMIN);
+        when(mockedRequest.getSession()).thenReturn(session);
+        when(session.getServletContext()).thenReturn(context);
+        when(context.getAttribute("loggedUsers")).thenReturn(loggedUsers);
+
+        String expected = "/error/error.jsp";
+        String actual = loginCommand.execute(mockedRequest);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void execute() {
+        HttpSession session = mock(HttpSession.class);
+        ServletContext context = mock(ServletContext.class);
+        String login = "user1";
+        String password = "11111eee";
+        HashSet<String> loggedUsers = new HashSet<>();
+        loggedUsers.add("user2");
+        when(mockedRequest.getParameter("login")).thenReturn(login);
+        when(mockedRequest.getParameter("password")).thenReturn(password);
+        when(mockedUserService.findByLogin("user1")).thenReturn(Optional.of(mockedUser));
+        when(mockedUser.getPasswordHash()).thenReturn(password);
+        when(mockedUser.isBlocked()).thenReturn(false);
+        when(mockedUser.getRole()).thenReturn(Role.ADMIN);
+        when(mockedRequest.getSession()).thenReturn(session);
+        when(session.getServletContext()).thenReturn(context);
+        when(context.getAttribute("loggedUsers")).thenReturn(loggedUsers);
+
+        String expected = "redirect:/admin/home";
+        String actual = loginCommand.execute(mockedRequest);
+
+        assertEquals(expected, actual);
+    }
 }
