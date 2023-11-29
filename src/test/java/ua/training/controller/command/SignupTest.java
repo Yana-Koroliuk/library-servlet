@@ -6,9 +6,10 @@ import ua.training.model.entity.User;
 import ua.training.model.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
+
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class SignupTest {
@@ -56,6 +57,35 @@ public class SignupTest {
         when(mockedUserService.findByLogin("user1")).thenReturn(Optional.of(user));
 
         String expected = "/signup.jsp?loginError=true";
+        String actual = signupCommand.execute(mockedRequest);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void executeWithSignUpFailure() {
+        String login = "user1";
+        when(mockedRequest.getParameter("login")).thenReturn(login);
+        when(mockedRequest.getParameter("password")).thenReturn("11111eee");
+        when(mockedUserService.findByLogin("user1")).thenReturn(Optional.empty());
+        when(mockedUserService.singUpUser(any(User.class))).thenReturn(false);
+
+        String expected = "/error/error.jsp";
+        String actual = signupCommand.execute(mockedRequest);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void execute() {
+        String login = "user1";
+        String password = "11111eee";
+        when(mockedRequest.getParameter("login")).thenReturn(login);
+        when(mockedRequest.getParameter("password")).thenReturn(password);
+        when(mockedUserService.findByLogin("user1")).thenReturn(Optional.empty());
+        when(mockedUserService.singUpUser(any(User.class))).thenReturn(true);
+
+        String expected = "/signup.jsp?successEvent=true";
         String actual = signupCommand.execute(mockedRequest);
 
         assertEquals(expected, actual);
