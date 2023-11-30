@@ -10,10 +10,11 @@ import ua.training.model.service.OrderService;
 import ua.training.model.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
+
 import java.time.LocalDate;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -111,6 +112,59 @@ public class OrderBookTest {
         when(mockedBook.getCount()).thenReturn(0);
 
         String expected = "/user/reader/orderBook.jsp?amountError=true";
+        String actual = orderBook.execute(mockedRequest);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void executeWithInvalidDate() {
+        when(mockedRequest.getParameter("bookId")).thenReturn("1");
+        when(mockedRequest.getParameter("userLogin")).thenReturn("user");
+        when(mockedRequest.getParameter("orderType")).thenReturn("subscription");
+        when(mockedRequest.getParameter("startDate")).thenReturn("2028-12-20");
+        when(mockedRequest.getParameter("endDate")).thenReturn("2008-12-20");
+        when(mockedUserService.findByLogin(any())).thenReturn(Optional.of(mockedUser));
+        when(mockedBookService.findByIdLocated(1)).thenReturn(Optional.of(mockedBook));
+        when(mockedBook.getCount()).thenReturn(2);
+
+        String expected =  "/user/reader/orderBook.jsp?validError=true";
+        String actual = orderBook.execute(mockedRequest);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void executeWithOrderBookFailure() {
+        when(mockedRequest.getParameter("bookId")).thenReturn("1");
+        when(mockedRequest.getParameter("userLogin")).thenReturn("user");
+        when(mockedRequest.getParameter("orderType")).thenReturn("subscription");
+        when(mockedRequest.getParameter("startDate")).thenReturn(String.valueOf(LocalDate.now().plusDays(12L)));
+        when(mockedRequest.getParameter("endDate")).thenReturn(String.valueOf(LocalDate.now().plusDays(16L)));
+        when(mockedUserService.findByLogin(any())).thenReturn(Optional.of(mockedUser));
+        when(mockedBookService.findByIdLocated(1)).thenReturn(Optional.of(mockedBook));
+        when(mockedBook.getCount()).thenReturn(2);
+        when(mockedOrderService.orderBook(any(Order.class))).thenReturn(false);
+
+        String expected = "/error/error.jsp";
+        String actual = orderBook.execute(mockedRequest);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void execute() {
+        when(mockedRequest.getParameter("bookId")).thenReturn("1");
+        when(mockedRequest.getParameter("userLogin")).thenReturn("user");
+        when(mockedRequest.getParameter("orderType")).thenReturn("subscription");
+        when(mockedRequest.getParameter("startDate")).thenReturn(String.valueOf(LocalDate.now().plusDays(12L)));
+        when(mockedRequest.getParameter("endDate")).thenReturn(String.valueOf(LocalDate.now().plusDays(16L)));
+        when(mockedUserService.findByLogin(any())).thenReturn(Optional.of(mockedUser));
+        when(mockedBookService.findByIdLocated(1)).thenReturn(Optional.of(mockedBook));
+        when(mockedBook.getCount()).thenReturn(2);
+        when(mockedOrderService.orderBook(any(Order.class))).thenReturn(true);
+
+        String expected = "redirect:/reader/home?successOrder=true";
         String actual = orderBook.execute(mockedRequest);
 
         assertEquals(expected, actual);
