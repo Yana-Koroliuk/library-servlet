@@ -12,7 +12,7 @@ import javax.servlet.http.HttpSession;
 import java.util.Collections;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -62,4 +62,43 @@ public class ReaderHomeTest {
         readerHome.execute(mockedRequest);
     }
 
+    @Test
+    public void executeWithDeleteOrderFailure() {
+        long userId = 1;
+        String orderId = "1";
+        String tab = "2";
+        when(mockedRequest.getSession()).thenReturn(mockedSession);
+        when(mockedSession.getAttribute("userLogin")).thenReturn("user");
+        when(mockedRequest.getParameter("orderId")).thenReturn(orderId);
+        when(mockedRequest.getParameter("tab")).thenReturn(tab);
+        when(mockedUserService.findByLogin("user")).thenReturn(Optional.of(mockedUser));
+        when(mockedUser.getId()).thenReturn(userId);
+        when(mockedOrderService.findByUserId(1)).thenReturn(Collections.singletonList(new Order.Builder().build()));
+        when(mockedOrderService.deleteOrder(Long.parseLong(orderId))).thenReturn(false);
+
+        String expected = "/error/error.jsp";
+        String actual = readerHome.execute(mockedRequest);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void execute() {
+        long userId = 1;
+        String orderId = "1";
+        String tab = "2";
+        when(mockedRequest.getSession()).thenReturn(mockedSession);
+        when(mockedSession.getAttribute("userLogin")).thenReturn("user");
+        when(mockedRequest.getParameter("orderId")).thenReturn(orderId);
+        when(mockedRequest.getParameter("tab")).thenReturn(tab);
+        when(mockedUserService.findByLogin("user")).thenReturn(Optional.of(mockedUser));
+        when(mockedUser.getId()).thenReturn(userId);
+        when(mockedOrderService.findByUserId(1)).thenReturn(Collections.singletonList(new Order.Builder().build()));
+        when(mockedOrderService.deleteOrder(Long.parseLong(orderId))).thenReturn(true);
+
+        String expected =  "/user/reader/home.jsp?tab="+tab;
+        String actual = readerHome.execute(mockedRequest);
+
+        assertEquals(expected, actual);
+    }
 }
