@@ -11,7 +11,7 @@ import javax.servlet.http.HttpSession;
 import java.util.HashSet;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -62,4 +62,24 @@ public class UnBlockUserTest {
         assertEquals(expected, actual);
     }
 
+    @Test
+    public void execute() {
+        HttpSession session = mock(HttpSession.class);
+        ServletContext context = mock(ServletContext.class);
+        String login = "login";
+        HashSet<String> loggedUsers = new HashSet<>();
+        loggedUsers.add(login);
+        when(mockedRequest.getParameter("id")).thenReturn("1");
+        when(mockedUserService.findById(1L)).thenReturn(Optional.of(mockedUser));
+        when(mockedUserService.unBlockUser(mockedUser)).thenReturn(true);
+        when(mockedRequest.getSession()).thenReturn(session);
+        when(session.getServletContext()).thenReturn(context);
+        when(context.getAttribute("loggedUsers")).thenReturn(loggedUsers);
+        when(mockedUser.getLogin()).thenReturn(login);
+
+        String expected = "redirect:/admin/home";
+        String actual = unBlockUser.execute(mockedRequest);
+
+        assertEquals(expected, actual);
+    }
 }
