@@ -94,18 +94,18 @@
     <div>
         <p>
             <fmt:message key="footer.licence"/>
-            <a href="https://github.com/Koroliuk/Library_servlet/blob/main/LICENSE">
+            <a href="https://github.com/Yana-Koroliuk/library-servlet/blob/main/LICENSE">
                 GNU GPLv3 License
             </a>.
             <br>
-            <a href="https://github.com/Koroliuk/Library_servlet"><fmt:message key="footer.project.github"/></a><br/>
-            <span>@2021</span>
+            <a href="https://github.com/Yana-Koroliuk/library-servlet"><fmt:message key="footer.project.github"/></a><br/>
+            <span>@2023</span>
         </p>
     </div>
     <div>
         <p>
             <fmt:message key="footer.questions"/>
-            <a href="https://github.com/Koroliuk/Library_servlet/issues/new">GitHub</a>.
+            <a href="https://github.com/Yana-Koroliuk/library-servlet/issues/new">GitHub</a>.
         </p>
     </div>
 </footer>

@@ -2,8 +2,8 @@ package ua.training.controller.command;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ua.training.model.entity.User;
 import ua.training.model.entity.enums.Role;
+import ua.training.model.entity.User;
 import ua.training.model.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;

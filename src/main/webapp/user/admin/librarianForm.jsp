@@ -10,7 +10,7 @@
 <html lang="${language}">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Main Page</title>
+    <title>Registration page for librarian</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -36,32 +36,49 @@
                         key="header.language.ukrainian"/></option>
             </select>
         </form>
-        <c:if test="${sessionScope.userLogin == null}">
-            <a class="btn btn-outline-dark mr-2" data-mdb-ripple-color="dark" href="${pageContext.request.contextPath}/app/signup">
-                <fmt:message key="header.signup"/>
-            </a>
-            <a class="btn btn-dark" href="${pageContext.request.contextPath}/app/login">
-                <fmt:message key="header.login"/></a>
-        </c:if>
-        <c:if test="${sessionScope.userLogin != null}">
-            <a class="btn btn-dark" href="${pageContext.request.contextPath}/app/logout">
-                <fmt:message key="header.logout"/></a>
-        </c:if>
+        <a class="btn btn-dark" href="${pageContext.request.contextPath}/app/logout"><fmt:message key="header.logout"/></a>
     </div>
 </header>
 <body>
-    <div class="container text-center align-items-center justify-content-center" style="margin-top: 10%;">
-        <h1 class="col-md-12"><fmt:message key="index.welcome"/></h1>
-        <a class="lead" href="${pageContext.request.contextPath}/app/search?page=1&keyWords=">Перейти до пошуку</a>
-        <div class="justify-content-sm-between">
-            <form method="post" action="${pageContext.request.contextPath}/app/search?page=1">
-                <label>
-                    <input class="form-control me-2 mr-2" type="text" name="keyWords" placeholder="Пошук">
+<div class="container text-center" style="margin-top: 10%;">
+    <h3>Створення бібліотекаря</h3>
+    <form id="form" method="post" action="${pageContext.request.contextPath}/app/admin/addLibrarian">
+        <div class="form-group">
+            <c:if test="${param.validError == true}">
+                <span class="text-danger"><fmt:message key="signup.message.check.input.data"/></span>
+                <br/>
+            </c:if>
+            <c:if test="${param.loginError == true}">
+                <span class="text-danger"><fmt:message key="signup.message.login.in.use"/></span>
+                <br/>
+            </c:if>
+            <c:if test="${param.successEvent == true}">
+                <span class="text-success"><fmt:message key="signup.success.registration"/></span>
+                <br/>
+            </c:if>
+            <div>
+                <label style="width: 230px;">
+                    <input class="form-control" type="text" id="login" name="login"
+                           placeholder="<fmt:message key="global.login"/>">
+                    <span class="text-danger" style="text-align: justify;" id="loginMessage"></span>
                 </label>
-                <input class="btn btn-outline-success p-1" type="submit" value="Знайти">
-            </form>
+            </div>
+            <div>
+                <label style="width: 230px;">
+                    <input class="form-control" type="password" id="password" name="password"
+                           placeholder="<fmt:message key="global.password"/>">
+                    <span class="text-danger" style="text-align: justify;" id="passwordMessage"></span>
+                </label>
+            </div>
+            <div>
+                <input type="submit" class="btn btn-outline-info" value="<fmt:message key="signup.button.name"/>">
+            </div>
         </div>
+    </form>
+    <div>
+        <a style="padding-left: 130px;" href="${pageContext.request.contextPath}/app/admin/home"><fmt:message key="global.to.home.page"/></a>
     </div>
+</div>
 </body>
 <footer class="navbar fixed-bottom d-flex flex-row justify-content-sm-between align-items-center bg-light text-lg-start p-3">
     <div>
@@ -82,4 +99,12 @@
         </p>
     </div>
 </footer>
+<script type="text/javascript">
+    const loginValidateMessage1 = '<fmt:message key="signup.login.validation.message1"/>';
+    const loginValidateMessage2 = '<fmt:message key="signup.login.validation.message2"/>';
+    const passwordValidateMessage1 = '<fmt:message key="signup.password.validation.message1"/>';
+    const passwordValidateMessage2 = '<fmt:message key="signup.password.validation.message2"/>';
+</script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/user/admin/js/librarianForm.js"></script>
 </html>
+
