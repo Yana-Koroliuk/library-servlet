@@ -1,0 +1,2 @@
+CREATE USER library WITH PASSWORD 'aa4364bcdA!';
+CREATE DATABASE library_db OWNER library;
