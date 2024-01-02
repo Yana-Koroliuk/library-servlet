@@ -6,7 +6,7 @@ The library management web application is an essential tool designed to streamli
 * **Public libraries:** Enhances community access to literary resources, facilitating easy book borrowing, returns, and catalog searches.
 * **Educational institutions:** Serves schools, colleges, and universities by managing textbooks and educational materials, thus supporting the academic curriculum.
 * **Personal libraries:** Ideal for individuals who want to maintain an organized record of their private book collections, tracking loans to friends and family.
-* 
+
 This web application offers an intuitive, user-friendly interface that enhances the accessibility and management of library resources. It simplifies administrative tasks such as cataloging, user account management, and transaction processing, thereby contributing to an improved organizational system, user experience, and library service delivery.
 
 
@@ -35,7 +35,7 @@ User have **3 roles** with different functionality: **reader**, **librarian**, *
 1. **Reader:**
 * Has access to their personalized dashboard which displays reader's current active books orders, including details such as order ID, book title, authors, edition, language, start and end date of the order, and order status: **READER_HOLE**, **RECEIVED**, **OVERDUE**, **CANCELED**
 * Ability to cancel orders for those pending or those that are in progress.
-* A search feature to find books by title, authors.
+* A search feature to find books by title or authors.
 * Access to reader's borrowing history for past reference.
 * An overview of any fees incurred from late returns or penalties.
 2. **Librarian:**
@@ -43,17 +43,17 @@ User have **3 roles** with different functionality: **reader**, **librarian**, *
 * View specific reader subscriptions.
 * Manage reader subscriptions, which involves canceling them or approving the subscription status.
 3. **Admin:**
-  * Managing user accounts:
-    - Adding new librarians 
-    - Blocking/Unblocking Users 
-  * Book Management:
-    - Adding books
-    - Editing books 
-    - Deleting books
+* Managing user accounts:
+    - adding new librarians
+    - blocking/unblocking users
+* Book management:
+    - adding books
+    - editing books
+    - deleting books
 
 Without being authorized, you can only search for a book by various criteria. You need
-to log in to use all other commands.
-All code has been verified by SonarLint. All dependencies are listed in **pom.xml** flie.
+to log in to use all other functionality.
+All code has been verified by SonarLint. All dependencies are listed in **pom.xml** file.
 
 ## Built with
 #### Back-end
@@ -70,8 +70,8 @@ All code has been verified by SonarLint. All dependencies are listed in **pom.xm
 
 ## Help
 
-Ask questions at https://t.me/Koroliuk_Yana and post issues on GitHub.
+Ask questions at [Yana Koroliuk](https://t.me/Koroliuk_Yana) and post issues on GitHub.
 
 ## LicenseGNU
 
-Don't forget about licence. This program is GNU General Public licensed.
+Don't forget about licence. This program is GPL General Public licensed.
